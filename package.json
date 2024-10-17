@@ -17,7 +17,12 @@
     "url": "https://github.com/lbaconski/todo-list/issues"
   },
   "homepage": "https://github.com/lbaconski/todo-list#readme",
-  "dependencies": {
-    "webpack": "^5.95.0"
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.0",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
   }
 }

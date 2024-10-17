@@ -1,0 +1,39 @@
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #282A35;
+    color: #fafafa
+  }
+  
+  #content {
+    width: 80%;
+    max-width: 1200px;
+    display: flex;
+  }
+  
+  #projects-container, #todos-container {
+    width: 50%;
+    padding: 20px;
+  }
+  
+  h1, h2 {
+    text-align: center;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  
