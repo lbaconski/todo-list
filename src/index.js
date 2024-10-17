@@ -11,6 +11,11 @@ const newTodoBtn = document.getElementById('new-todo-btn');
 let projects = [];
 let currentProjectIndex = 0;
 
+function isValidDate(dateString) {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return dateString.match(regex) && !isNaN(new Date(dateString).getTime());
+  }
+
 function initializeProjects() {
     const storedProjects = loadFromLocalStorage();
     if (storedProjects) {
@@ -64,14 +69,18 @@ function renderTodos(projectIndex) {
         const editButton = document.createElement('button');
         editButton.textContent = 'Edit';
         editButton.addEventListener('click', () => {
-            const newTitle = prompt('Edit todo title:', todo.title);
-            const newDueDate = prompt('Edit due date (YYYY-MM-DD):', todo.dueDate);
-            const newPriority = prompt('Edit priority (Low, Medium, High):', todo.priority);
-            if (newTitle && newDueDate && newPriority) {
-                editTodo(todo, newTitle, newDueDate, newPriority);
-                renderTodos(projectIndex);
-                saveToLocalStorage(projects);
+          const newTitle = prompt('Edit todo title:', todo.title);
+          const newDueDate = prompt('Edit due date (YYYY-MM-DD):', todo.dueDate);
+          const newPriority = prompt('Edit priority (Low, Medium, High):', todo.priority);
+          if (newTitle && newDueDate && newPriority) {
+            if (isValidDate(newDueDate)) {
+              editTodo(todo, newTitle, newDueDate, newPriority);
+              renderTodos(projectIndex);
+              saveToLocalStorage(projects);
+            } else {
+              alert('Please enter a valid date (YYYY-MM-DD).');
             }
+          }
         });
 
         const deleteButton = document.createElement('button');
@@ -100,17 +109,20 @@ newProjectBtn.addEventListener('click', () => {
 });
 
 newTodoBtn.addEventListener('click', () => {
-    const projectIndex = 0;
-    const todoTitle = prompt('Enter todo title:');
-    const todoDueDate = prompt('Enter due date (YYYY-MM-DD):');
-    const todoPriority = prompt('Enter priority (Low, Medium, High):');
-
-    if (todoTitle && todoDueDate && todoPriority) {
-        const newTodo = createTodo(todoTitle, 'Description', todoDueDate, todoPriority);
-        projects[projectIndex].todos.push(newTodo);
-        renderTodos(projectIndex);
-        saveToLocalStorage(projects);
+  const todoTitle = prompt('Enter todo title:');
+  const todoDueDate = prompt('Enter due date (YYYY-MM-DD):');
+  const todoPriority = prompt('Enter priority (Low, Medium, High):');
+  
+  if (todoTitle && todoDueDate && todoPriority) {
+    if (isValidDate(todoDueDate)) {
+      const newTodo = createTodo(todoTitle, 'Description', todoDueDate, todoPriority);
+      projects[currentProjectIndex].todos.push(newTodo);
+      renderTodos(currentProjectIndex);
+      saveToLocalStorage(projects);
+    } else {
+      alert('Please enter a valid date (YYYY-MM-DD).');
     }
+  }
 });
 
 initializeProjects();
