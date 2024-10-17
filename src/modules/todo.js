@@ -19,6 +19,15 @@ const createTodo = (title, description, dueDate, priority) => {
     if (priority === 'Medium') return 'medium-priority';
     return 'low-priority';
   }
+
+  const markTodoAsComplete = (todo) => {
+    todo.completed = true;
+  }
   
-  export { createTodo, editTodo, deleteTodo, getPriorityClass };
+  const isOverdue = (dueDate) => {
+    const today = new Date();
+    return new Date(dueDate) < today;
+  }
+
+  export { createTodo, editTodo, deleteTodo, getPriorityClass, markTodoAsComplete, isOverdue };
   

@@ -29,7 +29,7 @@ body {
     list-style-type: none;
     padding: 0;
   }
-  
+
   button {
     display: block;
     margin: 20px auto;
@@ -38,16 +38,25 @@ body {
   }
   
   .high-priority {
-    background-color: red;
+    background-color: rgb(255, 92, 92);
     color: white;
   }
   
   .medium-priority {
-    background-color: orange;
+    background-color: rgb(255, 198, 92);
     color: white;
   }
   
   .low-priority {
-    background-color: green;
+    background-color: rgb(92, 255, 92);
     color: white;
+  }
+
+.completed-crossed-out{
+    text-decoration: line-through;
+    color: #282A35;
+  }
+
+  .overdue {
+    color: red;
   }

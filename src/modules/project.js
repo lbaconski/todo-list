@@ -3,4 +3,10 @@ const createProject = (name) => {
     return { name, todos };
   };
   
-  export default createProject;
+  
+  const filterCompletedTodos = (project) => {
+    return project.todos.filter(todo => todo.completed);
+  }
+  
+  export default { createProject, filterCompletedTodos };
+  
