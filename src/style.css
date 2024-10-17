@@ -37,3 +37,17 @@ body {
     border-radius: 5px;
   }
   
+  .high-priority {
+    background-color: red;
+    color: white;
+  }
+  
+  .medium-priority {
+    background-color: orange;
+    color: white;
+  }
+  
+  .low-priority {
+    background-color: green;
+    color: white;
+  }

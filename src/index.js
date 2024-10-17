@@ -1,4 +1,4 @@
-import { createTodo, editTodo, deleteTodo } from './modules/todo';
+import { createTodo, editTodo, deleteTodo, getPriorityClass } from './modules/todo';
 import createProject from './modules/project';
 import { saveToLocalStorage, loadFromLocalStorage } from './modules/storage';
 import '../src/style.css';
@@ -36,6 +36,8 @@ function renderTodos(projectIndex) {
   project.todos.forEach((todo, todoIndex) => {
     const todoItem = document.createElement('li');
     todoItem.textContent = `${todo.title} - Due: ${todo.dueDate}`;
+
+    todoItem.classList.add(getPriorityClass(todo.priority));
 
     const editButton = document.createElement('button');
     editButton.textContent = 'Edit';
