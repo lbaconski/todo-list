@@ -1,8 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
 body {
   margin: 0;
-  font-family: "Lato", sans-serif;
+  font-family: "Lexend","Lato", sans-serif;
 }
 
+h2{
+  text-align: center;
+
+}
 .gral-btn {
   --color: #00A97F;
   padding: 0.8em 1.7em;
@@ -13,18 +19,20 @@ body {
   cursor: pointer;
   transition: .5s;
   font-weight: 600;
-
+  font-size: 16px;
   border: 3px solid;
   font-family: inherit;
   text-transform: uppercase;
   color: var(--color);
   z-index: 1;
  }
- 
+ .gral-btn:hover {
+  transform: scale(1.1);
+ }
 .sidebar {
   margin: 0;
-  padding: 0;
-  width: 200px;
+  padding: 10px;
+  width: 300px;
   background-color: #2b2c38;
   position: fixed;
   height: 100%;
@@ -38,18 +46,18 @@ body {
   text-decoration: none;
 }
  
-.sidebar a.active {
+.sidebar li.active {
   background-color: #04AA6D;
   color: white;
 }
 
-.sidebar a:hover:not(.active) {
+.sidebar li:hover:not(.active) {
   background-color: #555;
   color: white;
 }
 
 div.content {
-  margin-left: 200px;
+  margin-left: 310px;
   padding: 1px 16px;
   height: 1000px;
 }
@@ -60,12 +68,12 @@ div.content {
     height: auto;
     position: relative;
   }
-  .sidebar a {float: left;}
+  .sidebar li {float: left;}
   div.content {margin-left: 0;}
 }
 
 @media screen and (max-width: 400px) {
-  .sidebar a {
+  .sidebar li {
     text-align: center;
     float: none;
   }
@@ -76,24 +84,45 @@ div.content {
     padding: 0;
   }
   
-  li {   
+  div.todos {
+    padding-left: 10%;
+  }
+  div.todos>ul>li {   
    border-radius:0.6rem;
-    background-color: #fafafa;
     margin: 5px;
     padding: 5px;
     color: rgb(10, 10, 60);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+  }
+
+  ul.projects>li{
+    background-color: #fafafa;
+    border-radius: 5px;
+    border: solid 2px #d2d2d2;
+    margin: 2px;
+    width: 90%;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
   }
 
   .high-priority {
-    border: solid 2px rgb(255, 26, 26);
+    border: solid 2px rgb(224, 224, 224);
+    background-color: rgba(255, 26, 26, 0.1);
   }
   
   .medium-priority {
     border: solid 2px rgb(255, 200, 26);
+    background-color: rgba(255, 200, 26, 0.1);
   }
   
   .low-priority {
     border: solid 2px rgb(26, 200, 26);
+    background-color: rgba(26, 200, 26, 0.1);
   }
 
 .completed-crossed-out{
@@ -101,7 +130,7 @@ div.content {
     color: #282A35;
   }
 
-  .overdue {
+  div.todos>ul>li.overdue {
     color: red;
   }
 

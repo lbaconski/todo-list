@@ -3,7 +3,7 @@ import { saveToLocalStorage, loadFromLocalStorage } from './modules/storage';
 import '../src/style.css';
 import projectUtils from './modules/project';
 
-const { createProject, filterCompletedTodos } = projectUtils;
+const { createProject } = projectUtils;
 
 const projectsList = document.getElementById('projects-list');
 const todosList = document.getElementById('todos-list');
@@ -34,6 +34,8 @@ function renderProjects() {
       const projectItem = document.createElement('li');
       projectItem.textContent = project.name;
       projectItem.addEventListener('click', () => {
+        const clickedElement = event.currentTarget;
+        clickedElement.classList.add('active');
         currentProjectIndex = index;
         renderTodos(currentProjectIndex);
       });
@@ -112,10 +114,13 @@ function renderTodos(projectIndex) {
             renderTodos(projectIndex);
             saveToLocalStorage(projects);
         });
-
-        todoItem.appendChild(customCheckbox);
-        todoItem.appendChild(editButton);
-        todoItem.appendChild(deleteButton);
+        
+        const actions = document.createElement('div');
+        actions.classList.add('actions')
+        actions.appendChild(customCheckbox);
+        actions.appendChild(editButton);
+        actions.appendChild(deleteButton);
+        todoItem.appendChild(actions);
         todosList.appendChild(todoItem);
     });
 }
