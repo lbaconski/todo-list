@@ -21,7 +21,7 @@ const createTodo = (title, description, dueDate, priority) => {
   }
 
   const markTodoAsComplete = (todo) => {
-    todo.completed = true;
+    todo.completed = !todo.completed;
   }
   
   const isOverdue = (dueDate) => {

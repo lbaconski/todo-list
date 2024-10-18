@@ -1,55 +1,99 @@
-
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #282A35;
-    color: #fafafa
+  margin: 0;
+  font-family: "Lato", sans-serif;
+}
+
+.gral-btn {
+  --color: #00A97F;
+  padding: 0.8em 1.7em;
+  background-color: transparent;
+  border-radius: .3em;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: .5s;
+  font-weight: 600;
+
+  border: 3px solid;
+  font-family: inherit;
+  text-transform: uppercase;
+  color: var(--color);
+  z-index: 1;
+ }
+ 
+.sidebar {
+  margin: 0;
+  padding: 0;
+  width: 200px;
+  background-color: #2b2c38;
+  position: fixed;
+  height: 100%;
+  overflow: auto;
+}
+
+.sidebar a {
+  display: block;
+  color: black;
+  padding: 16px;
+  text-decoration: none;
+}
+ 
+.sidebar a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.sidebar a:hover:not(.active) {
+  background-color: #555;
+  color: white;
+}
+
+div.content {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+@media screen and (max-width: 700px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
   }
-  
-  #content {
-    width: 80%;
-    max-width: 1200px;
-    display: flex;
-  }
-  
-  #projects-container, #todos-container {
-    width: 50%;
-    padding: 20px;
-  }
-  
-  h1, h2 {
+  .sidebar a {float: left;}
+  div.content {margin-left: 0;}
+}
+
+@media screen and (max-width: 400px) {
+  .sidebar a {
     text-align: center;
+    float: none;
   }
-  
+}
+
   ul {
     list-style-type: none;
     padding: 0;
   }
-
-  button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    border-radius: 5px;
-  }
   
+  li {   
+   border-radius:0.6rem;
+    background-color: #fafafa;
+    margin: 5px;
+    padding: 5px;
+    color: rgb(10, 10, 60);
+  }
+
   .high-priority {
-    background-color: rgb(255, 92, 92);
-    color: white;
+    border: solid 2px rgb(255, 26, 26);
   }
   
   .medium-priority {
-    background-color: rgb(255, 198, 92);
-    color: white;
+    border: solid 2px rgb(255, 200, 26);
   }
   
   .low-priority {
-    background-color: rgb(92, 255, 92);
-    color: white;
+    border: solid 2px rgb(26, 200, 26);
   }
 
 .completed-crossed-out{
@@ -60,3 +104,72 @@ body {
   .overdue {
     color: red;
   }
+
+.edit-btn svg {
+width: 20px;
+height: 20px;
+stroke: #007bff; /* Blue color for the pencil */
+}
+
+/* Edit Button Hover */
+.edit-btn:hover svg {
+stroke: #0056b3; /* Darker blue when hovered */
+}
+
+/* Delete Button */
+.delete-btn svg {
+width: 20px;
+height: 20px;
+stroke: #dc3545; /* Red color for the trash can */
+}
+
+/* Delete Button Hover */
+.delete-btn:hover svg {
+stroke: #c82333; /* Darker red on hover */
+}
+/* General styles for buttons */
+button, .custom-checkbox {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  margin: 0 5px;
+  transition: transform 0.2s ease;
+}
+
+/* Custom checkbox input styling */
+.custom-checkbox input[type="checkbox"] {
+ display: none;
+}
+
+.custom-checkbox {
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #4CAF50;
+  border-radius: 5px;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.custom-checkbox svg {
+  width: 16px;
+  height: 16px;
+  stroke: #4CAF50;
+  visibility: hidden;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: visibility 0.2s ease;
+}
+
+.custom-checkbox input[type="checkbox"]:checked + svg {
+  visibility: visible;
+}
+
+.custom-checkbox:hover {
+  border-color: #45a049;
+}
