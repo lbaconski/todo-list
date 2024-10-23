@@ -191,7 +191,24 @@ function openEditTodoModal(todo, projectIndex, todoIndex) {
       }
   };
 }
+newProjectBtn.addEventListener('click', () => {
+    modal.style.display = 'block';
+});
 
+createProjectBtn.addEventListener('click', () => {
+    const projectName = projectNameInput.value.trim();
+    const projectColor = projectColorInput.value;
+
+    if (projectName) {
+        const newProject = createProject(projectName, projectColor);
+        projects.push(newProject);
+        renderProjects();
+        saveToLocalStorage(projects);
+        modal.style.display = 'none';
+    } else {
+        alert('Please enter a project name.');
+    }
+});
 newTodoBtn.addEventListener('click', () => {
   todoModal.style.display = 'block';
   modalHeader.textContent = 'Create New Todo';
