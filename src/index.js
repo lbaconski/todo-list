@@ -59,11 +59,14 @@ function confirmDeleteProject(projectIndex) {
       deleteProject(projectIndex);
   }
 }
+
+
 function renderProjects() {
   projectsList.innerHTML = '';
   projects.forEach((project, index) => {
       const projectItem = document.createElement('li');
       projectItem.textContent = project.name;
+      projectItem.style.backgroundColor = project.color; 
 
       const deleteButton = document.createElement('button');
       deleteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
@@ -74,7 +77,11 @@ function renderProjects() {
       deleteButton.addEventListener('click', () => confirmDeleteProject(index));
 
       projectItem.appendChild(deleteButton);
-      projectItem.addEventListener('click', () => {
+      projectItem.addEventListener('click', (event) => {
+        const previouslyActive = document.querySelector('.sidebar li.active');
+        if (previouslyActive) {
+            previouslyActive.classList.remove('active');
+        }
           const clickedElement = event.currentTarget;
           clickedElement.classList.add('active');
           currentProjectIndex = index;
