@@ -2,6 +2,7 @@ import { createTodo, editTodo, deleteTodo, getPriorityClass, markTodoAsComplete,
 import { saveToLocalStorage, loadFromLocalStorage } from './modules/storage';
 import '../src/style.css';
 import projectUtils from './modules/project';
+import { createModal, createTodoModal } from './modules/ui'; 
 
 const { createProject } = projectUtils;
 
@@ -13,17 +14,20 @@ const newTodoBtn = document.getElementById('new-todo-btn');
 let projects = [];
 let currentProjectIndex = 0;
 
+const { modal, projectNameInput, createProjectBtn, projectColorInput } = createModal();
+const { modal: todoModal, modalHeader, todoTitleInput, todoDueDateInput, todoPriorityInput, createTodoBtn, saveTodoBtn } = createTodoModal();
+
 function isValidDate(dateString) {
     const regex = /^\d{4}-\d{2}-\d{2}$/;
     return dateString.match(regex) && !isNaN(new Date(dateString).getTime());
-  }
+}
 
 function initializeProjects() {
     const storedProjects = loadFromLocalStorage();
     if (storedProjects) {
         projects = storedProjects;
     } else {
-        const defaultProject = createProject('Default Project');
+        const defaultProject = createProject('Default Project', '#04AA6D');
         projects.push(defaultProject);
     }
 }
@@ -31,74 +35,68 @@ function initializeProjects() {
 function renderProjects() {
     projectsList.innerHTML = '';
     projects.forEach((project, index) => {
-      const projectItem = document.createElement('li');
-      projectItem.textContent = project.name;
-      projectItem.addEventListener('click', () => {
-        const clickedElement = event.currentTarget;
-        clickedElement.classList.add('active');
-        currentProjectIndex = index;
-        renderTodos(currentProjectIndex);
-      });
-      projectsList.appendChild(projectItem);
+        const projectItem = document.createElement('li');
+        projectItem.textContent = project.name;
+        projectItem.style.backgroundColor = project.color;
+
+        projectItem.addEventListener('click', () => {
+            currentProjectIndex = index;
+            document.querySelectorAll('#projects-list li').forEach(item => item.classList.remove('active'));
+            projectItem.classList.add('active');
+            renderTodos(currentProjectIndex);
+        });
+
+        projectsList.appendChild(projectItem);
     });
-  }
+}
 
 function renderTodos(projectIndex) {
     todosList.innerHTML = '';
     const project = projects[projectIndex];
     project.todos.forEach((todo, todoIndex) => {
         const todoItem = document.createElement('li');
-        const todoItemName = document.createElement('span')
+        const todoItemName = document.createElement('span');
         todoItemName.textContent = `${todo.title} - Due: ${todo.dueDate}`;
-        todoItem.appendChild(todoItemName)
+        todoItem.appendChild(todoItemName);
 
         todoItem.classList.add(getPriorityClass(todo.priority));
 
         if (todo.completed) {
-            todoItemName.classList.add('completed-crossed-out')
+            todoItemName.classList.add('completed-crossed-out');
         } else {
-          todoItemName.classList.remove('completed-crossed-out')
+            todoItemName.classList.remove('completed-crossed-out');
         }
+
         if (isOverdue(todo.dueDate)) {
-            todoItem.classList.add('overdue')
-          }
-        
+            todoItem.classList.add('overdue');
+        }
+
         const completeCheckbox = document.createElement('input');
-        completeCheckbox.checked = todo.completed; 
-        completeCheckbox.classList.add('complete-checkbox')
+        completeCheckbox.checked = todo.completed;
+        completeCheckbox.classList.add('complete-checkbox');
         completeCheckbox.type = 'checkbox';
         completeCheckbox.addEventListener('change', () => {
             markTodoAsComplete(todo);
             renderTodos(projectIndex);
             saveToLocalStorage(projects);
         });
+
         const customCheckbox = document.createElement('label');
         customCheckbox.classList.add('custom-checkbox');
         customCheckbox.appendChild(completeCheckbox);
-        customCheckbox.insertAdjacentHTML('beforeend',` <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
-        <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>`
-)
+        customCheckbox.insertAdjacentHTML('beforeend', ` <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>`);
 
         const editButton = document.createElement('button');
         editButton.classList.add('edit-btn');
-        editButton.innerHTML = `    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L7 20.5 3 21l.5-4L18.5 2.5z" />
-    </svg>`
+        editButton.innerHTML = ` <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L7 20.5 3 21l.5-4L18.5 2.5z" />
+        </svg>`;
+        
         editButton.addEventListener('click', () => {
-          const newTitle = prompt('Edit todo title:', todo.title);
-          const newDueDate = prompt('Edit due date (YYYY-MM-DD):', todo.dueDate);
-          const newPriority = prompt('Edit priority (Low, Medium, High):', todo.priority);
-          if (newTitle && newDueDate && newPriority) {
-            if (isValidDate(newDueDate)) {
-              editTodo(todo, newTitle, newDueDate, newPriority);
-              renderTodos(projectIndex);
-              saveToLocalStorage(projects);
-            } else {
-              alert('Please enter a valid date (YYYY-MM-DD).');
-            }
-          }
+            openEditTodoModal(todo, projectIndex, todoIndex);
         });
 
         const deleteButton = document.createElement('button');
@@ -107,16 +105,20 @@ function renderTodos(projectIndex) {
         <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 1 1 4 0v2" />
         <line x1="10" y1="11" x2="10" y2="17" />
         <line x1="14" y1="11" x2="14" y2="17" />
-    </svg>`
-    deleteButton.classList.add('delete-btn');
+        </svg>`;
+        deleteButton.classList.add('delete-btn');
+        
         deleteButton.addEventListener('click', () => {
-            deleteTodo(project.todos, todoIndex);
-            renderTodos(projectIndex);
-            saveToLocalStorage(projects);
+            const confirmation = confirm('Are you sure you want to delete this todo?');
+            if (confirmation) {
+                deleteTodo(project.todos, todoIndex);
+                renderTodos(projectIndex);
+                saveToLocalStorage(projects);
+            }
         });
         
         const actions = document.createElement('div');
-        actions.classList.add('actions')
+        actions.classList.add('actions');
         actions.appendChild(customCheckbox);
         actions.appendChild(editButton);
         actions.appendChild(deleteButton);
@@ -125,31 +127,57 @@ function renderTodos(projectIndex) {
     });
 }
 
-newProjectBtn.addEventListener('click', () => {
-    const projectName = prompt('Enter new project name:');
-    if (projectName) {
-        const newProject = createProject(projectName);
-        projects.push(newProject);
-        renderProjects();
-        saveToLocalStorage(projects);
-    }
-});
+function openEditTodoModal(todo, projectIndex, todoIndex) {
+  todoModal.style.display = 'block';
+  modalHeader.textContent = 'Edit Todo';
+  todoTitleInput.value = todo.title;
+  todoDueDateInput.value = todo.dueDate;
+  todoPriorityInput.value = todo.priority;
+
+  createTodoBtn.style.display = 'none'; // Hide 'Add Todo' button
+  saveTodoBtn.style.display = 'block'; // Show 'Save' button
+
+  saveTodoBtn.onclick = () => {
+      const newTitle = todoTitleInput.value.trim();
+      const newDueDate = todoDueDateInput.value;
+      const newPriority = todoPriorityInput.value;
+
+      if (newTitle && newDueDate) {
+          editTodo(todo, newTitle, newDueDate, newPriority);
+          renderTodos(projectIndex);
+          saveToLocalStorage(projects);
+          todoModal.style.display = 'none';
+      } else {
+          alert('Please enter a title and due date.');
+      }
+  };
+}
 
 newTodoBtn.addEventListener('click', () => {
-  const todoTitle = prompt('Enter todo title:');
-  const todoDueDate = prompt('Enter due date (YYYY-MM-DD):');
-  const todoPriority = prompt('Enter priority (Low, Medium, High):');
-  
-  if (todoTitle && todoDueDate && todoPriority) {
-    if (isValidDate(todoDueDate)) {
-      const newTodo = createTodo(todoTitle, 'Description', todoDueDate, todoPriority);
-      projects[currentProjectIndex].todos.push(newTodo);
-      renderTodos(currentProjectIndex);
-      saveToLocalStorage(projects);
-    } else {
-      alert('Please enter a valid date (YYYY-MM-DD).');
-    }
-  }
+  todoModal.style.display = 'block';
+  modalHeader.textContent = 'Create New Todo';
+  todoTitleInput.value = '';
+  todoDueDateInput.value = '';
+  todoPriorityInput.value = 'Low';
+
+  saveTodoBtn.style.display = 'none'; // Hide 'Save' button
+  createTodoBtn.style.display = 'block'; // Show 'Add Todo' button
+
+  createTodoBtn.onclick = () => {
+      const todoTitle = todoTitleInput.value.trim();
+      const todoDueDate = todoDueDateInput.value;
+      const todoPriority = todoPriorityInput.value;
+
+      if (todoTitle && todoDueDate) {
+          const newTodo = createTodo(todoTitle, 'Description', todoDueDate, todoPriority);
+          projects[currentProjectIndex].todos.push(newTodo);
+          renderTodos(currentProjectIndex);
+          saveToLocalStorage(projects);
+          todoModal.style.display = 'none';
+      } else {
+          alert('Please enter a todo title and due date.');
+      }
+  };
 });
 
 initializeProjects();

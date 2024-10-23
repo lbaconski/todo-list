@@ -38,21 +38,22 @@ h2{
   height: 100%;
   overflow: auto;
 }
-
-.sidebar a {
+.sidebar li{
   display: block;
-  color: black;
+  color: #ccc;
   padding: 16px;
   text-decoration: none;
 }
- 
+
 .sidebar li.active {
-  background-color: #04AA6D;
-  color: white;
+  border: 3px solid white; 
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  color:#fafafa
 }
 
+
 .sidebar li:hover:not(.active) {
-  background-color: #555;
+  background-color: #555; 
   color: white;
 }
 
@@ -98,8 +99,7 @@ div.content {
     width: 80%;
   }
 
-  ul.projects>li{
-    background-color: #fafafa;
+  ul.projects > li {
     border-radius: 5px;
     border: solid 2px #d2d2d2;
     margin: 2px;
@@ -108,7 +108,14 @@ div.content {
     display: flex;
     align-items: center;
     text-transform: uppercase;
-  }
+    padding: 10px; 
+    transition: background-color 0.3s; 
+}
+
+ul.projects > li:hover {
+    opacity: 0.9; 
+}
+
 
   .high-priority {
     border: solid 2px rgb(224, 224, 224);
@@ -137,26 +144,23 @@ div.content {
 .edit-btn svg {
 width: 20px;
 height: 20px;
-stroke: #007bff; /* Blue color for the pencil */
+stroke: #007bff; 
 }
 
-/* Edit Button Hover */
 .edit-btn:hover svg {
-stroke: #0056b3; /* Darker blue when hovered */
+stroke: #0056b3; 
 }
 
-/* Delete Button */
 .delete-btn svg {
 width: 20px;
 height: 20px;
-stroke: #dc3545; /* Red color for the trash can */
+stroke: #dc3545; 
 }
 
-/* Delete Button Hover */
 .delete-btn:hover svg {
-stroke: #c82333; /* Darker red on hover */
+stroke: #c82333; 
 }
-/* General styles for buttons */
+
 button, .custom-checkbox {
   background-color: transparent;
   border: none;
@@ -166,7 +170,6 @@ button, .custom-checkbox {
   transition: transform 0.2s ease;
 }
 
-/* Custom checkbox input styling */
 .custom-checkbox input[type="checkbox"] {
  display: none;
 }
@@ -201,4 +204,114 @@ button, .custom-checkbox {
 
 .custom-checkbox:hover {
   border-color: #45a049;
+}
+
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%;
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%; 
+}
+
+.closeBtn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeBtn:hover,
+.closeBtn:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+input[type="text"] {
+  width: 100%; 
+  padding: 12px 20px; 
+  margin: 8px 0; 
+  border: 2px solid #ccc; 
+  border-radius: 4px; 
+  box-sizing: border-box; 
+  font-size: 16px; 
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: #007BFF; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+  outline: none; 
+}
+input[type="text"]::placeholder {
+  color: #888; 
+  opacity: 1; 
+}
+
+input[type="date"] {
+  width: 100%; 
+  padding: 12px 20px;
+  margin: 8px 0; 
+  border: 2px solid #ccc; 
+  border-radius: 4px; 
+  box-sizing: border-box; 
+  font-size: 16px; 
+  transition: border-color 0.3s, box-shadow 0.3s; 
+}
+
+input[type="date"]:focus {
+  border-color: #007BFF; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  outline: none; 
+}
+
+select {
+  width: 100%; 
+  padding: 12px 20px; 
+  margin: 8px 0; 
+  border: 2px solid #ccc; 
+  border-radius: 4px; 
+  box-sizing: border-box; 
+  font-size: 16px; 
+  transition: border-color 0.3s, box-shadow 0.3s; 
+}
+
+select:focus {
+  border-color: #007BFF; 
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+  outline: none; 
+}
+
+select option {
+  padding: 10px; 
+}
+
+select option[value='Low'] {
+  background-color: #d4edda; 
+  color: #155724; 
+}
+
+select option[value='Medium'] {
+  background-color: #fff3cd; 
+  color: #856404; 
+}
+
+select option[value='High'] {
+  background-color: #f8d7da;
+  color: #721c24; /* Dark red text */
 }
