@@ -32,28 +32,64 @@ function initializeProjects() {
     }
 }
 
+function deleteProject(projectIndex) {
+  const deletedProject = projects[projectIndex];
+
+  projects.splice(projectIndex, 1); 
+  if (projects.length > 0) {
+
+      if (currentProjectIndex >= projectIndex) {
+    
+          currentProjectIndex = Math.max(currentProjectIndex - 1, 0);
+      }
+      renderTodos(currentProjectIndex); 
+  } else {
+ 
+      currentProjectIndex = 0;
+      todosList.innerHTML = ''; 
+  }
+  
+  renderProjects(); 
+  saveToLocalStorage(projects); 
+}
+
+function confirmDeleteProject(projectIndex) {
+  const confirmation = confirm("Are you sure you want to delete this project?");
+  if (confirmation) {
+      deleteProject(projectIndex);
+  }
+}
 function renderProjects() {
-    projectsList.innerHTML = '';
-    projects.forEach((project, index) => {
-        const projectItem = document.createElement('li');
-        projectItem.textContent = project.name;
-        projectItem.style.backgroundColor = project.color;
+  projectsList.innerHTML = '';
+  projects.forEach((project, index) => {
+      const projectItem = document.createElement('li');
+      projectItem.textContent = project.name;
 
-        projectItem.addEventListener('click', () => {
-            currentProjectIndex = index;
-            document.querySelectorAll('#projects-list li').forEach(item => item.classList.remove('active'));
-            projectItem.classList.add('active');
-            renderTodos(currentProjectIndex);
-        });
+      const deleteButton = document.createElement('button');
+      deleteButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
+      <polyline points="3 6 5 6 21 6" />
+      <path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m5 0V4a2 2 0 1 1 4 0v2" />
+      </svg>`;
+      deleteButton.classList.add('delete-btn');
+      deleteButton.addEventListener('click', () => confirmDeleteProject(index));
 
-        projectsList.appendChild(projectItem);
-    });
+      projectItem.appendChild(deleteButton);
+      projectItem.addEventListener('click', () => {
+          const clickedElement = event.currentTarget;
+          clickedElement.classList.add('active');
+          currentProjectIndex = index;
+          renderTodos(currentProjectIndex);
+      });
+      
+      projectsList.appendChild(projectItem);
+  });
 }
 
 function renderTodos(projectIndex) {
-    todosList.innerHTML = '';
-    const project = projects[projectIndex];
-    project.todos.forEach((todo, todoIndex) => {
+  if (projects[projectIndex]) { 
+      todosList.innerHTML = '';
+      const project = projects[projectIndex];
+      project.todos.forEach((todo, todoIndex) => {
         const todoItem = document.createElement('li');
         const todoItemName = document.createElement('span');
         todoItemName.textContent = `${todo.title} - Due: ${todo.dueDate}`;
@@ -124,7 +160,10 @@ function renderTodos(projectIndex) {
         actions.appendChild(deleteButton);
         todoItem.appendChild(actions);
         todosList.appendChild(todoItem);
-    });
+      });
+  } else {
+      todosList.innerHTML = ''; 
+  }
 }
 
 function openEditTodoModal(todo, projectIndex, todoIndex) {
@@ -134,8 +173,8 @@ function openEditTodoModal(todo, projectIndex, todoIndex) {
   todoDueDateInput.value = todo.dueDate;
   todoPriorityInput.value = todo.priority;
 
-  createTodoBtn.style.display = 'none'; // Hide 'Add Todo' button
-  saveTodoBtn.style.display = 'block'; // Show 'Save' button
+  createTodoBtn.style.display = 'none'; 
+  saveTodoBtn.style.display = 'block'; 
 
   saveTodoBtn.onclick = () => {
       const newTitle = todoTitleInput.value.trim();
@@ -160,8 +199,8 @@ newTodoBtn.addEventListener('click', () => {
   todoDueDateInput.value = '';
   todoPriorityInput.value = 'Low';
 
-  saveTodoBtn.style.display = 'none'; // Hide 'Save' button
-  createTodoBtn.style.display = 'block'; // Show 'Add Todo' button
+  saveTodoBtn.style.display = 'none'; 
+  createTodoBtn.style.display = 'block'; 
 
   createTodoBtn.onclick = () => {
       const todoTitle = todoTitleInput.value.trim();
